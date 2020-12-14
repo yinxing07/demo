@@ -34,6 +34,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
             msgBack = "message from server: bind success";
         }
         ctx.writeAndFlush(msgBack);
+
         LOGGER.info(String.valueOf(ChannelManagerBean.getActiveChannelList().size()));
     }
 
