@@ -27,7 +27,6 @@ public class BaseService {
         for (String channelId : channelIds) {
             ChannelHandlerContext ctx = ChannelManagerBean.getActiveChannel(channelId);
             if (ctx.channel().isOpen() && ctx.channel().isActive()) {
-                LOGGER.info(ctx.channel().id().toString());
                 ctx.writeAndFlush(msg);
             }else{
                 LOGGER.info("delete inActive channel:{}",channelId);

@@ -27,9 +27,10 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
         JSONObject object = JSON.parseObject(msg.toString());
         String msgBack = "verify failed!";
+        String deviceId = object.getString("deviceId");
         if(object.getString("verify").equals("yx")){
-            ChannelManagerBean.addChannel(object.getString("deviceId"), ctx);
-            LOGGER.info("deviceId:{}",object.getString("deviceId"));
+            ChannelManagerBean.addChannel(deviceId, ctx);
+            LOGGER.info("current connections:{}, deviceId:{}",ChannelManagerBean.getChannelListIds().size(), deviceId);
             msgBack = "message from server: bind success";
         }
         ctx.writeAndFlush(msgBack);
