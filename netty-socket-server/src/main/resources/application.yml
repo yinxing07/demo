@@ -1,0 +1,7 @@
+server:
+  port: 16801
+  servlet:
+    context-path: /netty-socket-server
+spring:
+  application:
+    name: netty-socket-server

@@ -1,0 +1,48 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+/mvnw
+/mvnw.cmd
+/pom.xml
+/*.gitignore
+/.mvn
+/demo-common/mvnw
+/demo-common/mvnw.cmd
+/demo-common/.gitignore
+/demo-common/.mvn
+/netty-socket-server/mvnw
+/netty-socket-server/mvnw.cmd
+/netty-socket-server/.mvn
+/netty-socket-client/mvnw.cmd
+/netty-socket-client/mvnw
+/netty-socket-client/.mvn
