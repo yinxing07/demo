@@ -16,22 +16,22 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @desc
  */
 
-@Component
 public class BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseService.class);
 
     private static AtomicInteger counter = new AtomicInteger(0);
 
-    @Scheduled(cron = "*/1 * * * * ?")
-    public static void send() {
-        String msg = "message " + counter.get();
-        LOGGER.info("msg={}",msg);
+    public static void pushRealTimeQuotation(String msg){
         ConcurrentSkipListSet<String> channelIds = ChannelManagerBean.getChannelListIds();
         for (String channelId : channelIds) {
             ChannelHandlerContext ctx = ChannelManagerBean.getActiveChannel(channelId);
             if (ctx.channel().isOpen() && ctx.channel().isActive()) {
+                LOGGER.info(ctx.channel().id().toString());
                 ctx.writeAndFlush(msg);
+            }else{
+                LOGGER.info("delete inActive channel:{}",channelId);
+                ChannelManagerBean.removeChannel(channelId);
             }
         }
         counter.getAndIncrement();

@@ -9,6 +9,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -45,7 +48,9 @@ public class NettySocketClientStarter {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         LOGGER.info("正在连接中...");
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new ClientHandler())
+                                .addLast("decoder", new StringDecoder(CharsetUtil.UTF_8))
+                                .addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));
                     }
                 });
         connect();

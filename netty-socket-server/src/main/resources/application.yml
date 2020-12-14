@@ -5,3 +5,15 @@ server:
 spring:
   application:
     name: netty-socket-server
+#  redis:
+#    host: 127.0.0.1
+#    password:
+#    port: 6379
+#    timeout: 3000
+#    database: 0
+#    lettuce:
+#      pool:
+#        max-active: 8
+#        max-wait: -1
+#        max-idle: 8
+#        min-idle: 0

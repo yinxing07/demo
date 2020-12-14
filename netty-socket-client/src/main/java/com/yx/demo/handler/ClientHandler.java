@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -23,7 +24,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientHandler.class);
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
         ByteBuf buf = msg.readBytes(msg.readableBytes());
         String msgStr = buf.toString(StandardCharsets.UTF_8);
         LOGGER.info("get a message from server:{}", msgStr);
@@ -36,7 +37,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         LOGGER.info("channel is active,localAddress is {}", ctx.channel().localAddress());
         JSONObject obj = new JSONObject();
-        obj.put("channelId", UUID.randomUUID());
+        obj.put("verify", "yx");
+        obj.put("deviceId", UUID.randomUUID());
         LOGGER.info("send a message to server:{}", obj);
         ctx.writeAndFlush(Unpooled.copiedBuffer(obj.toJSONString(), CharsetUtil.UTF_8)); // 必须有flush
     }
@@ -58,4 +60,5 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
         ctx.close();
         LOGGER.error("exception caught, cause:{}", cause.getMessage());
     }
+
 }

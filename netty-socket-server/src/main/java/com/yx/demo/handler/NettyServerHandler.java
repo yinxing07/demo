@@ -3,53 +3,52 @@ package com.yx.demo.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yx.demo.beans.ChannelManagerBean;
-import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * @author yinxing
  * @date 2020/12/7 15:33
  * @desc
  */
-
+@Component
+@ChannelHandler.Sharable
 public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
-        LOGGER.info("(messageReceived)get a message from client:{}", msg);
-    }
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         LOGGER.info("(channelRead)get a message from client:{}", msg);
 
         JSONObject object = JSON.parseObject(msg.toString());
-        String channelId = object.getString("channelId");
-        ChannelManagerBean.addChannel(channelId,ctx);
-
-        String msgBack = "message from server: bind success";
+        String msgBack = "verify failed!";
+        if(object.getString("verify").equals("yx")){
+            ChannelManagerBean.addChannel(object.getString("deviceId"), ctx);
+            LOGGER.info("deviceId:{}",object.getString("deviceId"));
+            msgBack = "message from server: bind success";
+        }
         ctx.writeAndFlush(msgBack);
         LOGGER.info(String.valueOf(ChannelManagerBean.getActiveChannelList().size()));
     }
 
     @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("handlerAdded:{}", ctx.name());
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        LOGGER.info("handlerRemoved:{}", ctx.name());
-
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        String channelId = ctx.channel().id().toString();
+        ChannelManagerBean.removeChannel(channelId);
+        LOGGER.info("channel closed, remove channelID:{}", channelId);
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.info("exceptionCaught:{}", cause.getMessage());
+//        String channelId = ctx.channel().id().toString();
+//        ChannelManagerBean.removeChannel(channelId);
+//        LOGGER.info("an exception occurs:channelId={},cause={}", channelId, cause.getMessage());
+        LOGGER.info("an exception occurs:cause={}", cause.getMessage());
     }
+
 }
