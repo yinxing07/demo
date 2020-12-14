@@ -41,6 +41,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         String channelId = ctx.channel().id().toString();
         ChannelManagerBean.removeChannel(channelId);
+
         LOGGER.info("channel closed, remove channelID:{}", channelId);
     }
 
