@@ -20,8 +20,6 @@ public class BaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BaseService.class);
 
-    private static AtomicInteger counter = new AtomicInteger(0);
-
     public static void pushRealTimeQuotation(String msg){
         ConcurrentSkipListSet<String> channelIds = ChannelManagerBean.getChannelListIds();
         for (String channelId : channelIds) {
@@ -33,6 +31,6 @@ public class BaseService {
                 ChannelManagerBean.removeChannel(channelId);
             }
         }
-        counter.getAndIncrement();
     }
+
 }
