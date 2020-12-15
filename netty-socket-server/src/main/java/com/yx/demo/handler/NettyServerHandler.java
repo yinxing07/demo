@@ -24,7 +24,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         LOGGER.info("(channelRead)get a message from client:{}", msg);
-
         JSONObject object = JSON.parseObject(msg.toString());
         String msgBack = "verify failed!";
         String deviceId = object.getString("deviceId");
