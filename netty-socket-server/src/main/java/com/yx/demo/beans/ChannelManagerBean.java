@@ -22,13 +22,6 @@ public class ChannelManagerBean {
 
     private static ConcurrentSkipListSet<String> channelListSet = new ConcurrentSkipListSet<>();
 
-    /**
-     * 管理所有的channel
-     * GlobalEventExecutor.INSTANCE 是全局的事件执行器，是一个单例
-     */
-//    private static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-
     public static void addChannel(String channelId, ChannelHandlerContext ctx){
         channelListSet.add(channelId);
         channelListMap.put(channelId,ctx);
