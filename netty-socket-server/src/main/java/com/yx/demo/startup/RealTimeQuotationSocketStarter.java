@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yx.demo.beans.RealTimeQuotationBean;
 import com.yx.demo.requestDTO.WebSocketLoginReqParam;
 import com.yx.demo.service.impl.BaseService;
+import com.yx.demo.utils.DateUtil;
 import com.yx.demo.utils.NumberUtil;
 import com.yx.demo.utils.RedisUtil;
 import com.yx.demo.utils.RequestUtil;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.net.URI;
+import java.util.Calendar;
 
 /**
  * @author yinxing
@@ -34,7 +36,6 @@ public class RealTimeQuotationSocketStarter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RealTimeQuotationSocketStarter.class);
 
-    //    private static final String url = "ws://127.0.0.1:17801/renting-socketserver/ws/asset";
     private static final String url = "wss://k8stest.xinyusoft.com/api/websocket";
 
     @Resource
@@ -54,7 +55,6 @@ public class RealTimeQuotationSocketStarter {
 
                 @Override
                 public void onMessage(String message) {
-//                    LOGGER.info("[websocket] 收到消息：{}", message);
                     if (StringUtils.isNotEmpty(message)) {
                         JSONObject object = JSON.parseObject(message);
                         if ("REAL_MARKET".equals(object.getString("type"))) {
@@ -65,6 +65,8 @@ public class RealTimeQuotationSocketStarter {
                             String upDownPercent = NumberUtil.getPercent(close, upDownPoint);
                             updateRealTimeQuotationData(quotes, upDownPoint, upDownPercent);
                             pushData(quotes, upDownPoint, upDownPercent);
+                        }else if("HEARTBEAT".equals(object.getString("type"))){
+                            LOGGER.info("heartBeat time:{}",DateUtil.getCurrentDate(null));
                         }
                     }
                 }
@@ -76,7 +78,7 @@ public class RealTimeQuotationSocketStarter {
 
                 @Override
                 public void onError(Exception e) {
-                    LOGGER.info("[websocket] 连接错误：{}", e.getMessage());
+                    LOGGER.info("[websocket] 连接异常：{}", e.getMessage());
                 }
             };
             client.connect();
@@ -116,7 +118,7 @@ public class RealTimeQuotationSocketStarter {
         if (StringUtils.isNotEmpty(realQuotationStr)) {
             model = JSON.parseObject(realQuotationStr, RealTimeQuotationBean.class);
         }
-        String currTradingDay = "20201214";
+        String currTradingDay = DateUtil.getTradingDay(Calendar.MILLISECOND);
         String contractName = quotes.getString("contName");
         Double open = quotes.getDouble("open");
         Double high = quotes.getDouble("high");

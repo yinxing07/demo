@@ -23,7 +23,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        LOGGER.info("(channelRead)get a message from client:{}", msg);
+        LOGGER.info("get a message from client:{}", msg);
         JSONObject object = JSON.parseObject(msg.toString());
         String msgBack = "verify failed!";
         String deviceId = object.getString("deviceId");
@@ -33,7 +33,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
             msgBack = "message from server: bind success";
         }
         ctx.writeAndFlush(msgBack);
-
         LOGGER.info(String.valueOf(ChannelManagerBean.getActiveChannelList().size()));
     }
 
@@ -46,9 +45,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-//        String channelId = ctx.channel().id().toString();
-//        ChannelManagerBean.removeChannel(channelId);
-//        LOGGER.info("an exception occurs:channelId={},cause={}", channelId, cause.getMessage());
         LOGGER.info("an exception occurs:cause={}", cause.getMessage());
     }
 
