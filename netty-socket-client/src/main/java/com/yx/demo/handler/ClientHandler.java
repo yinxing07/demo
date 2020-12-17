@@ -27,7 +27,7 @@ public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) throws Exception {
         ByteBuf buf = msg.readBytes(msg.readableBytes());
         String msgStr = buf.toString(StandardCharsets.UTF_8);
-        LOGGER.info("get a message from server:{}", msgStr);
+        LOGGER.info(msgStr);
     }
 
     /**
