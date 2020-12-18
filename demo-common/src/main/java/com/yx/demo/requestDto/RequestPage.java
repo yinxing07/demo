@@ -1,4 +1,4 @@
-package com.yx.demo.requestDTO;
+package com.yx.demo.requestDto;
 
 import java.io.Serializable;
 

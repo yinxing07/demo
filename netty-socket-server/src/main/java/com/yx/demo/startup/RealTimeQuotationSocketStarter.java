@@ -2,8 +2,8 @@ package com.yx.demo.startup;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
 import com.yx.demo.beans.RealTimeQuotationBean;
+import com.yx.demo.constants.RedisKeyConstant;
 import com.yx.demo.requestDTO.WebSocketLoginReqParam;
 import com.yx.demo.service.impl.BaseService;
 import com.yx.demo.utils.DateUtil;
@@ -17,7 +17,6 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -65,8 +64,8 @@ public class RealTimeQuotationSocketStarter {
                             String upDownPercent = NumberUtil.getPercent(close, upDownPoint);
                             updateRealTimeQuotationData(quotes, upDownPoint, upDownPercent);
                             pushData(quotes, upDownPoint, upDownPercent);
-                        }else if("HEARTBEAT".equals(object.getString("type"))){
-                            LOGGER.info("heartBeat time:{}",DateUtil.getCurrentDate(null));
+                        } else if ("HEARTBEAT".equals(object.getString("type"))) {
+                            LOGGER.info("heartBeat time:{}", DateUtil.getCurrentDate(null));
                         }
                     }
                 }
@@ -97,17 +96,20 @@ public class RealTimeQuotationSocketStarter {
     }
 
     public void pushData(JSONObject quotes, Double upDownPoint, String upDownPercent) {
+        String contact = quotes.getString("contract");
+        double last = quotes.getDouble("last");
         StringBuilder builder = new StringBuilder();
-        builder.append(quotes.getString("contract")).append(",")
+        builder.append(contact).append(",")
                 .append(quotes.getLong("time")).append(",")
-                .append(quotes.getDouble("last")).append(",")
+                .append(last).append(",")
                 .append(upDownPoint).append(",")
                 .append(upDownPercent);
         //推送实时行情
         BaseService.pushRealTimeQuotation(builder.toString());
 
-        //实时行情放入redis，处理挂单
-        RedisUtil.publish("REAL_QUOTATION_PENDING_ORDER_CHANNEL",quotes.getString("contract")+","+quotes.getDouble("last"));
+        //实时行情放入redis，处理挂单、计算分钟线
+        RedisUtil.publish(RedisKeyConstant.RedisChannels.REAL_TIME_QUOT_CHANNEL,
+                contact + "," + last);
     }
 
     public void updateRealTimeQuotationData(JSONObject quotes, Double upDownPoint, String upDownPercent) {

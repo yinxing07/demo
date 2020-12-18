@@ -17,13 +17,15 @@ import javax.annotation.Resource;
 public class RedisSubscribeComponent implements MessageListener {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
         byte[] body = message.getBody();
         String data = (String) redisTemplate.getValueSerializer().deserialize(body);
         String[] dataArr = data.split(",");
-//        System.out.println("redis订阅监听到消息："+data);
+        String contract = dataArr[0];
+        double last = Double.parseDouble(dataArr[1]);
+        System.out.println("redis订阅监听到消息：" + data);
     }
 }

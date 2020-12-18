@@ -10,17 +10,16 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 
 @Configuration
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class RedisConfig {
 
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Bean
-    public RedisTemplate<String, Serializable> redisCatchTemplate(LettuceConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisCatchTemplate(LettuceConnectionFactory redisConnectionFactory) {
 
         //键的序列化方式
         redisTemplate.setKeySerializer(new StringRedisSerializer());

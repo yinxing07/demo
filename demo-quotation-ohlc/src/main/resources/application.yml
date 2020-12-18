@@ -1,0 +1,7 @@
+server:
+  port: 16803
+  servlet:
+    context-path: /demo-quotation-ohlc
+spring:
+  application:
+    name: demo-quotation-ohlc
