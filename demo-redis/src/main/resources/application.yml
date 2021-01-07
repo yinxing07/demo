@@ -1,0 +1,7 @@
+server:
+  port: 18801
+  servlet:
+    context-path: /demo-redis
+spring:
+  application:
+    name: demo-redis
