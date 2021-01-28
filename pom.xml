@@ -24,6 +24,7 @@
         <module>netty-socket-server</module>
         <module>netty-socket-client</module>
         <module>demo-quotation-ohlc</module>
+        <module>demo-redis</module>
     </modules>
 
     <dependencies>

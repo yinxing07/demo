@@ -17,12 +17,11 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.net.URI;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * @author yinxing
@@ -36,9 +35,6 @@ public class RealTimeQuotationSocketStarter {
     private static final Logger LOGGER = LoggerFactory.getLogger(RealTimeQuotationSocketStarter.class);
 
     private static final String url = "wss://k8stest.xinyusoft.com/api/websocket";
-
-    @Resource
-    private RedisTemplate redisTemplate;
 
     @Bean
     public WebSocketClient webSocketClient() {
@@ -65,7 +61,7 @@ public class RealTimeQuotationSocketStarter {
                             updateRealTimeQuotationData(quotes, upDownPoint, upDownPercent);
                             pushData(quotes, upDownPoint, upDownPercent);
                         } else if ("HEARTBEAT".equals(object.getString("type"))) {
-                            LOGGER.info("heartBeat time:{}", DateUtil.getCurrentDate(null));
+//                            LOGGER.info("heartBeat time:{}", DateUtil.getCurrentDate(null));
                         }
                     }
                 }
@@ -115,7 +111,7 @@ public class RealTimeQuotationSocketStarter {
     public void updateRealTimeQuotationData(JSONObject quotes, Double upDownPoint, String upDownPercent) {
         String contract = quotes.getString("contract");
         String key = contract.concat("_real_time_data");
-        String realQuotationStr = (String) redisTemplate.boundValueOps(key).get();
+        String realQuotationStr = (String) RedisUtil.get(key);
         RealTimeQuotationBean model = new RealTimeQuotationBean();
         if (StringUtils.isNotEmpty(realQuotationStr)) {
             model = JSON.parseObject(realQuotationStr, RealTimeQuotationBean.class);

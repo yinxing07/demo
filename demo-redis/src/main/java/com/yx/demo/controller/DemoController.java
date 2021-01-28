@@ -7,4 +7,5 @@ package com.yx.demo.controller;
  */
 
 public class DemoController {
+
 }

@@ -45,8 +45,8 @@ public class RequestUtil {
 
     private final static AtomicInteger ATOMIC_COUNT = new AtomicInteger(0);
 
-    @Value("${spring.application.name}")
-    private String appName;
+//    @Value("${spring.application.name}")
+    private String appName = "yidian";
     private static String applicationName;
     @Autowired
     private GatewayConfig gatewayConfig;

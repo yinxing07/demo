@@ -1,5 +1,6 @@
 package com.yx.demo.components;
 
+import com.yx.demo.utils.RedisUtil;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;

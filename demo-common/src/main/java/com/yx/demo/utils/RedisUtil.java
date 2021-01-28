@@ -1,5 +1,7 @@
 package com.yx.demo.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -439,7 +441,7 @@ public class RedisUtil {
      * @param value 值
      * @return
      */
-    public static boolean lSet(String key, Object value) {
+    public static boolean rPush(String key, Object value) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
             return true;
@@ -456,7 +458,7 @@ public class RedisUtil {
      * @param time 时间(秒)
      * @return
      */
-    public static boolean lSet(String key, Object value, long time) {
+    public static boolean rPush(String key, Object value, long time) {
         try {
             redisTemplate.opsForList().rightPush(key, value);
             if (time > 0) expire(key, time);
@@ -473,7 +475,7 @@ public class RedisUtil {
      * @param value 值
      * @return
      */
-    public static boolean lSet(String key, List<Object> value) {
+    public static boolean rPush(String key, List<Object> value) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             return true;
@@ -490,7 +492,7 @@ public class RedisUtil {
      * @param time 时间(秒)
      * @return
      */
-    public static boolean lSet(String key, List<Object> value, long time) {
+    public static boolean rPush(String key, List<Object> value, long time) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             if (time > 0) expire(key, time);
@@ -519,7 +521,7 @@ public class RedisUtil {
     }
 
     /**
-     * 移除N个值为value
+     * 移除list中的N个键值
      * @param key 键
      * @param count 移除多少个
      * @param value 值
@@ -536,7 +538,7 @@ public class RedisUtil {
     }
 
     /**
-     * 发布消息到通道
+     *  发布消息到通道
      * @param channel
      * @param message
      */
